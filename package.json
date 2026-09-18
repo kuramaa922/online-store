@@ -1,0 +1,100 @@
+{
+    "name": "online-store",
+    "version": "1.0.0",
+    "private": true,
+    "description": "Учебный проект: интернет-магазин на React + TypeScript + webpack",
+    "engines": {
+        "node": ">=20"
+    },
+    "scripts": {
+        "start": "webpack serve --mode development",
+        "build": "webpack --mode production",
+        "build:dev": "webpack --mode development",
+        "typecheck": "tsc --noEmit",
+        "lint": "eslint . --max-warnings 0",
+        "lint:fix": "eslint . --fix",
+        "format": "prettier --write .",
+        "format:check": "prettier --check .",
+        "test": "jest",
+        "test:watch": "jest --watch",
+        "test:coverage": "jest --coverage",
+        "prepare": "husky"
+    },
+    "dependencies": {
+        "@mantine/core": "^9.6.1",
+        "@mantine/hooks": "^9.6.1",
+        "@tabler/icons-react": "^3.46.0",
+        "react": "^19.3.0",
+        "react-dom": "^19.3.0"
+    },
+    "lint-staged": {
+        "*.{ts,tsx,js,jsx}": [
+            "eslint --fix --max-warnings 0",
+            "prettier --write"
+        ],
+        "*.{css,scss,json,md,html}": [
+            "prettier --write"
+        ]
+    },
+    "browserslist": {
+        "production": [
+            ">0.3%",
+            "not dead",
+            "not op_mini all"
+        ],
+        "development": [
+            "last 2 chrome version",
+            "last 2 firefox version",
+            "last 2 safari version"
+        ]
+    },
+    "devDependencies": {
+        "@babel/core": "^8.0.5",
+        "@babel/preset-env": "^8.0.5",
+        "@babel/preset-react": "^8.0.1",
+        "@babel/preset-typescript": "^8.0.1",
+        "@eslint/js": "^9.39.5",
+        "@pmmmwh/react-refresh-webpack-plugin": "^0.6.3",
+        "@svgr/webpack": "^8.1.0",
+        "@testing-library/jest-dom": "^7.0.1",
+        "@testing-library/react": "^16.3.3",
+        "@testing-library/user-event": "^14.6.7",
+        "@types/jest": "^30.0.0",
+        "@types/react": "^19.3.0",
+        "@types/react-dom": "^19.3.0",
+        "autoprefixer": "^10.6.1",
+        "babel-jest": "^30.5.1",
+        "babel-loader": "^10.1.1",
+        "css-loader": "^7.1.5",
+        "css-minimizer-webpack-plugin": "^8.0.0",
+        "dotenv": "^17.4.2",
+        "eslint": "^9.39.5",
+        "eslint-config-prettier": "^10.1.8",
+        "eslint-import-resolver-typescript": "^4.4.5",
+        "eslint-plugin-import": "^2.32.0",
+        "eslint-plugin-jsx-a11y": "^6.10.2",
+        "eslint-plugin-react": "^7.37.5",
+        "eslint-plugin-react-hooks": "^7.1.1",
+        "eslint-plugin-unused-imports": "^4.4.1",
+        "globals": "^17.12.0",
+        "html-webpack-plugin": "^5.6.8",
+        "husky": "^9.1.7",
+        "identity-obj-proxy": "^3.0.0",
+        "jest": "^30.5.1",
+        "jest-environment-jsdom": "^30.5.1",
+        "lint-staged": "^17.5.1",
+        "mini-css-extract-plugin": "^2.10.2",
+        "postcss": "^8.5.28",
+        "postcss-loader": "^8.2.1",
+        "postcss-preset-mantine": "^1.18.0",
+        "postcss-simple-vars": "^7.0.1",
+        "prettier": "^3.9.7",
+        "react-refresh": "^0.19.0",
+        "style-loader": "^4.0.0",
+        "typescript": "^5.9.3",
+        "typescript-eslint": "^8.70.0",
+        "webpack": "^5.111.0",
+        "webpack-cli": "^7.2.3",
+        "webpack-dev-server": "^6.0.0"
+    }
+}

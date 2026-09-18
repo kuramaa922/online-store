@@ -1,0 +1,4 @@
+/* Единая точка входа для стилей: импортируется в src/main.tsx */
+@import './reset.css';
+@import './variables.css';
+@import './global.css';
