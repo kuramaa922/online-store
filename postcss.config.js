@@ -1,9 +1,9 @@
 /**
- * PostCSS - постобработка CSS.
+ * PostCSS — постобработка CSS. Vite находит этот файл и применяет его сам.
  * postcss-preset-mantine добавляет функции Mantine (light-dark(), rem(), миксины),
  * postcss-simple-vars хранит брейкпоинты, autoprefixer расставляет вендорные префиксы.
  */
-module.exports = {
+export default {
     plugins: {
         'postcss-preset-mantine': {},
         'postcss-simple-vars': {

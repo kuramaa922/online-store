@@ -33,10 +33,9 @@ test-results/
 *.tsbuildinfo
 
 # ---- Env ----
-.env
+# .env лежит в git (общие значения), локальные переопределения — нет
 .env.local
 .env.*.local
-!.env.example
 
 # ---- Logs ----
 logs/

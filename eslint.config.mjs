@@ -4,6 +4,7 @@ import importPlugin from 'eslint-plugin-import';
 import jsxA11y from 'eslint-plugin-jsx-a11y';
 import react from 'eslint-plugin-react';
 import reactHooks from 'eslint-plugin-react-hooks';
+import reactRefresh from 'eslint-plugin-react-refresh';
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
 import unusedImports from 'eslint-plugin-unused-imports';
@@ -17,7 +18,7 @@ export default tseslint.config(
 
     // --- Исходники приложения: строгие правила с проверкой типов ---------------
     {
-        files: ['src/**/*.{ts,tsx}', 'jest.setup.ts'],
+        files: ['src/**/*.{ts,tsx}', 'vitest.setup.ts', 'vite.config.ts'],
         extends: [
             ...tseslint.configs.recommendedTypeChecked,
             ...tseslint.configs.stylisticTypeChecked,
@@ -27,7 +28,8 @@ export default tseslint.config(
             sourceType: 'module',
             globals: { ...globals.browser },
             parserOptions: {
-                project: ['./tsconfig.json'],
+                // Сам находит нужный tsconfig (app или node) для каждого файла
+                projectService: true,
                 tsconfigRootDir: import.meta.dirname,
                 ecmaFeatures: { jsx: true },
             },
@@ -35,12 +37,16 @@ export default tseslint.config(
         settings: {
             react: { version: 'detect' },
             'import/resolver': {
-                typescript: { alwaysTryTypes: true, project: './tsconfig.json' },
+                typescript: {
+                    alwaysTryTypes: true,
+                    project: ['./tsconfig.app.json', './tsconfig.node.json'],
+                },
             },
         },
         plugins: {
             react,
             'react-hooks': reactHooks,
+            'react-refresh': reactRefresh,
             import: importPlugin,
             'jsx-a11y': jsxA11y,
             'unused-imports': unusedImports,
@@ -52,6 +58,8 @@ export default tseslint.config(
             ...jsxA11y.configs.recommended.rules,
 
             // React
+            // Fast Refresh в Vite работает, только если файл экспортирует одни компоненты
+            'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
             'react/prop-types': 'off',
             'react/jsx-no-useless-fragment': 'warn',
             'react/self-closing-comp': 'warn',
@@ -139,36 +147,25 @@ export default tseslint.config(
         },
     },
 
-    // --- Тесты: доступны глобальные describe/it/expect --------------------------
+    // --- Тесты (describe/it/expect импортируются из 'vitest') --------------------
     {
-        files: ['src/**/*.{test,spec}.{ts,tsx}', 'jest.setup.ts'],
-        languageOptions: {
-            globals: { ...globals.jest },
-        },
+        files: ['src/**/*.{test,spec}.{ts,tsx}', 'vitest.setup.ts'],
         rules: {
             '@typescript-eslint/no-empty-function': 'off',
             '@typescript-eslint/unbound-method': 'off',
         },
     },
 
-    // --- Конфиги сборки на CommonJS (webpack, babel, postcss, jest) -------------
+    // --- Конфиги (vite, postcss, eslint): выполняются в Node.js -----------------
+    // В package.json стоит "type": "module", поэтому .js — это ES-модули
     {
-        files: ['**/*.js', '**/*.cjs'],
+        files: ['*.{js,mjs,ts}'],
         languageOptions: {
-            sourceType: 'commonjs',
+            sourceType: 'module',
             globals: { ...globals.node },
         },
         rules: {
             'no-console': 'off',
-        },
-    },
-
-    // --- Конфиги на ES-модулях (сам eslint.config.mjs) --------------------------
-    {
-        files: ['**/*.mjs'],
-        languageOptions: {
-            sourceType: 'module',
-            globals: { ...globals.node },
         },
     },
 

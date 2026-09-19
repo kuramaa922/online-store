@@ -1,34 +1,7 @@
 {
-    "compilerOptions": {
-        "target": "ES2022",
-        "lib": ["ES2022", "DOM", "DOM.Iterable"],
-        "module": "ESNext",
-        "moduleResolution": "bundler",
-        "jsx": "react-jsx",
-
-        /* Компилирует Babel, а TypeScript только проверяет типы */
-        "noEmit": true,
-        "isolatedModules": true,
-        "allowJs": true,
-        "resolveJsonModule": true,
-        "esModuleInterop": true,
-        "allowSyntheticDefaultImports": true,
-        "forceConsistentCasingInFileNames": true,
-        "skipLibCheck": true,
-
-        "strict": true,
-        "noUnusedLocals": true,
-        "noUnusedParameters": true,
-        "noFallthroughCasesInSwitch": true,
-        "noUncheckedIndexedAccess": true,
-
-        /* Алиас. Должен совпадать с resolve.alias в webpack.config.js */
-        "paths": {
-            "@/*": ["./src/*"]
-        },
-
-        "types": ["jest", "@testing-library/jest-dom"]
-    },
-    "include": ["src", "jest.setup.ts"],
-    "exclude": ["node_modules", "dist", "coverage"]
+    // Корневой конфиг только ссылается на два других:
+    // код приложения работает в браузере, а vite.config.ts — в Node.js,
+    // поэтому у них разные наборы типов (DOM и Node).
+    "files": [],
+    "references": [{ "path": "./tsconfig.app.json" }, { "path": "./tsconfig.node.json" }]
 }

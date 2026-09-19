@@ -1,4 +1,16 @@
-import '@testing-library/jest-dom';
+import '@testing-library/jest-dom/vitest';
+import { cleanup } from '@testing-library/react';
+import { afterEach } from 'vitest';
+
+/**
+ * Матчеры вроде toBeInTheDocument() подключены импортом выше.
+ *
+ * Очистка DOM после каждого теста. В Jest Testing Library делает это сама,
+ * а в Vitest без глобальных describe/it/afterEach — только если вызвать явно.
+ */
+afterEach(() => {
+    cleanup();
+});
 
 /**
  * Mantine использует window.matchMedia и ResizeObserver, которых нет в jsdom.

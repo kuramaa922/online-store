@@ -3,7 +3,7 @@ import { Code, Container, Text, Title } from '@mantine/core';
 /**
  * Стартовая заглушка
  *
- * 1. Загрузить товары с API (адрес лежит в константе __API_URL__, webpack.config.js)
+ * 1. Загрузить товары с API (адрес лежит в import.meta.env.VITE_API_URL, файл .env)
  *    Пока идёт загрузка - показывать лоадер вместо списка.
  * 2. Сделать шапку: название магазина + количество товаров и сумма в корзине
  *    Шапка прилипает к верху при прокрутке
@@ -24,11 +24,11 @@ export default function App() {
                 Шаблон готов к работе. Удалите содержимое App.tsx и напишите своё приложение.
             </Text>
             {/*
-              Пример переменной окружения: значение API_URL из .env подставляется
-              webpack'ом (DefinePlugin) при сборке. Если .env нет — адрес по умолчанию.
+              Пример переменной окружения: Vite читает .env и подставляет
+              значения переменных с префиксом VITE_ в import.meta.env.
             */}
             <Text size="sm" mt="md">
-                Адрес API: <Code>{__API_URL__}</Code>
+                Адрес API: <Code>{import.meta.env.VITE_API_URL}</Code>
             </Text>
         </Container>
     );

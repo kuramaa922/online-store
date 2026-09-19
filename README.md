@@ -23,41 +23,39 @@ https://res.cloudinary.com/sivadass/raw/upload/v1535817394/json/products.json
 
 - При наведении на карточку товара должны меняться стили согласно макету.
 
-- Также тебе необходимо написать тесты, используя React Testing Library и Jest.
+- Также тебе необходимо написать тесты, используя React Testing Library и Vitest.
 
 ---
 
 ## Шаблон проекта
 
-> Сборка проекта - **webpack**, тесты - **Jest + React Testing Library**
-
 ### Стек
 
-React 19 · TypeScript · webpack 5 · Mantine · Jest + React Testing Library
+React 19 · TypeScript · Vite · Mantine · Vitest + React Testing Library
 
 ### Быстрый старт
 
 ```bash
 npm install     # установка зависимостей
-cp .env.example .env
-npm start       # дев-сервер на http://localhost:3000
+npm run dev     # дев-сервер на http://localhost:3000
 ```
 
 ### Команды
 
 | Команда                             | Что делает                                        |
 | ----------------------------------- | ------------------------------------------------- |
-| `npm start`                         | Дев-сервер с горячей перезагрузкой (Fast Refresh) |
+| `npm run dev`                       | Дев-сервер с горячей перезагрузкой (Fast Refresh) |
 | `npm run build`                     | Продакшен-сборка в `dist/`                        |
+| `npm run preview`                   | Локальный просмотр собранного `dist/`             |
 | `npm run typecheck`                 | Проверка типов без сборки                         |
 | `npm run lint` / `npm run lint:fix` | ESLint                                            |
 | `npm run format`                    | Prettier                                          |
-| `npm test` / `npm run test:watch`   | Тесты                                             |
+| `npm test` / `npm run test:watch`   | Тесты (Vitest)                                    |
 | `npm run test:coverage`             | Тесты с отчётом о покрытии                        |
 
 ### Файловая структура
 
-Внутри `src/` структуру придумываете вы сами - заранее созданных папок нет намеренно.
+Внутри `src/` структуру придумываете вы сами — заранее созданных папок нет намеренно.
 Заводите их по мере необходимости и группируйте файлы так, как вам удобно защищать
 своё решение.
 
@@ -67,36 +65,54 @@ npm start       # дев-сервер на http://localhost:3000
 import { CartProvider } from '@/context/CartContext';
 ```
 
-Алиас прописан в трёх местах, и менять его нужно во всех сразу:
-`webpack.config.js` (`resolve.alias`), `tsconfig.json` (`paths`), `jest.config.js`
-(`moduleNameMapper`).
+Алиас прописан в двух местах, и менять его нужно в обоих сразу:
+`vite.config.ts` (`resolve.alias`) и `tsconfig.app.json` (`paths`).
+Тестам отдельная настройка не нужна — Vitest читает `vite.config.ts`.
 
 ### Что уже настроено
 
-- **Хэширование файлов** - имена вида `main.39b66110.js`, чтобы браузер не отдавал
-  устаревший код из кэша. Библиотеки вынесены в отдельный чанк `vendors`.
-- **Импорт любых файлов** - CSS и CSS Modules (`*.module.css`), картинки, шрифты.
-  SVG по умолчанию импортируется React-компонентом, а с `?url` - ссылкой:
+- **Хэширование файлов** — Vite добавляет хэш в имена сам (`index-D12hJym3.js`),
+  чтобы браузер не отдавал устаревший код из кэша. Библиотеки вынесены в отдельный
+  чанк `vendors`.
+- **Импорт любых файлов** — CSS и CSS Modules (`*.module.css`), картинки, шрифты
+  работают из коробки. SVG по умолчанию импортируется ссылкой, а с `?react` —
+  React-компонентом:
 
     ```ts
-    import Logo from '@/assets/logo.svg'; // <Logo />
-    import logoUrl from '@/assets/logo.svg?url'; // '/assets/logo.a1b2c3d4.svg'
+    import logoUrl from '@/assets/logo.svg'; // '/assets/logo-a1b2c3d4.svg'
+    import Logo from '@/assets/logo.svg?react'; // <Logo />
     ```
 
-- **Переменные окружения** - задаются в `.env`, попадают в код через `webpack.DefinePlugin`.
-  Адрес API доступен как глобальная константа `__API_URL__`.
-- **Mantine** - подключён вместе с `postcss-preset-mantine`; `MantineProvider` уже
+- **Mantine** — подключён вместе с `postcss-preset-mantine`; `MantineProvider` уже
   стоит в `src/main.tsx`.
-- **Проверки перед коммитом** - husky + lint-staged прогоняют ESLint и Prettier
+- **Проверки перед коммитом** — husky + lint-staged прогоняют ESLint и Prettier
   по изменённым файлам. CI на GitHub Actions повторяет все проверки на пул-реквестах.
+
+### Переменные окружения
+
+Vite читает файл `.env` сам. В код попадают только переменные с префиксом `VITE_`:
+
+```ts
+fetch(import.meta.env.VITE_API_URL);
+```
+
+- `.env` лежит в git — в нём общие значения по умолчанию;
+- `.env.local` — ваши личные переопределения, в git не попадает;
+- тип каждой новой переменной добавьте в `src/vite-env.d.ts`.
+
+Всё из `.env` оказывается в открытом виде в собранном JS — секретам там не место.
 
 ### Состояние приложения
 
-Корзина реализуется **только на Context API** (`createContext` + `useContext`). Redux, Zustand, MobX и прочие стейт-менеджеры
-в этом проекте использовать нельзя
+Корзина реализуется **только на Context API** (`createContext` + `useContext`,
+при необходимости `useReducer`). Redux, Zustand, MobX и прочие стейт-менеджеры
+в этом проекте использовать нельзя — ESLint не пропустит такой импорт.
 
 ### Тесты
 
-Компоненты Mantine нужно оборачивать в `MantineProvider` - иначе тест упадёт.
-Пример смоук-теста лежит в `src/App.test.tsx`, заглушки для `matchMedia` и
-`ResizeObserver` уже настроены в `jest.setup.ts`.
+Тесты пишутся на Vitest + React Testing Library. Функции `describe`, `it`, `expect`
+импортируются явно: `import { describe, expect, it } from 'vitest'`.
+
+Компоненты Mantine нужно оборачивать в `MantineProvider` — иначе тест упадёт.
+Пример теста лежит в `src/App.test.tsx`, заглушки для `matchMedia` и
+`ResizeObserver` уже настроены в `vitest.setup.ts`.
